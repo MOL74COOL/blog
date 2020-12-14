@@ -1,0 +1,170 @@
+
+img{border:0}
+
+a{
+	text-decoration: none;
+}
+
+#header {
+	height: 150px;
+}
+
+#header-top {
+	height: 28px;
+	font-size: 20px;
+	color: cornflowerblue;
+	background-color: azure;
+	
+}
+
+#Date{
+	float: right;
+	margin-left:15px;
+}
+
+#title{
+	position:absolute;
+	left:48%;
+	font-size: 23px;
+}
+
+#register{
+	float: left;
+	font-size: 20px;
+	margin-right:15px;
+}
+
+#header-middle{
+	height: 90px;
+	background-color: cornflowerblue;
+	
+}
+
+#header-bottom{
+
+}
+html,body,ul,li{
+	padding: 0;
+	margin: 0;
+}
+
+
+
+ul,li {
+	list-style-type: none;
+	text-transform: capitalize;
+}
+
+/*导航栏开始*/
+#nav {
+	width: 90%;
+	display: block;
+	margin-left:5%;
+	}
+
+#nav .jquery_out {
+	float: left;
+	line-height: 32px;
+	display: block;
+	border-right: 1px solid #fff;
+	text-align: center;
+	color: #fff;
+	font: 18px/32px "微软雅黑";
+	background: #062723 0 0 repeat-x;
+}
+
+#nav .jquery {
+	margin-right: 1px;
+	padding: 0 2em;
+	width: 100px;
+}
+
+#nav .mainlevel {
+	background: azure;
+	float: left;
+	border-right: 1px solid #fff;
+	width: 180px;
+	
+}
+
+#nav .mainlevel a {
+	color: #000;
+	font: 16px/20px "微软雅黑";
+	line-height: 32px;
+	display: block;
+	padding: 0 60px;
+	width:80px;
+}
+
+/*让鼠标移到时变色*/
+#nav .mainlevel a:hover {
+	color: #fff;
+	text-decoration: none;
+	background: #062723  0 0 repeat-x;
+}
+
+/*让li重合*/
+#nav .mainlevel ul {
+	display: none;
+	position: absolute;
+}
+
+/*下拉时显示*/
+#nav .mainlevel li {
+	border-top: 1px solid #fff;
+	background: deepskyblue;
+	width: 180px;
+}
+
+/*导航栏结束*/
+
+
+
+/*midle开始*/
+#midle{
+	height: 600px;
+	/* background-image:url(../images/ai6.2.png); */
+	background-color: azure;
+}
+
+#midle-top{
+	height: 100px;
+	background-image: url("../images/banner.jpg");
+}
+/*middle结束*/
+
+table{
+	width: 60%;
+	/*style="margin: 7% 20% 0 5%" align="center"*/
+	margin-top: 7%;
+	margin-left: 20%;
+	text-align: center;
+}
+
+tr{
+	height: 40px;
+}
+
+/*bottom开始*/
+#bottom{
+	height: 35px;
+	background-color: cornflowerblue;
+	text-align: center;
+	padding-top: 16px;
+	color: #fff;
+	font: 15px/30px "微软雅黑";
+}
+
+#white{
+	height: 10px;
+	
+}
+/*bottom结束*/
+
+/*hello页面*/
+#midle1{
+	height: 600px;
+	background-image: url("../images/3.jpg");
+	background-repeat: no-repeat;
+}
+

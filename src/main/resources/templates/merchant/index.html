@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>图书导航</title>
+
+</head>
+<!--基本-->
+<script src="../../static/merchant/js/jquery.js" th:src="@{/merchant/js/jquery.js}"></script>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<!--首页框架-->
+<script src="../../static/merchant/js/index.js" th:src="@{/merchant/js/index.js}"></script>
+<link href="../../static/merchant/css/style.css" th:href="@{/merchant/css/style.css}" rel="stylesheet" />
+
+<!--图片轮转-->
+<script th:src="@{/merchant/js/jquery.tools.min.js}"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/merchant/styles/scrollable-horizontal.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/merchant/styles/scrollable-buttons.css}" />
+
+<style type="text/css">
+	* {
+		margin:0;
+		padding:0;
+	}
+	body{
+		background-image: url("/merchant/img/greyscale_natural_grunge3.jpg");
+		background-repeat: repeat;
+	}
+	#containet {
+		display:inline-block;
+		border:1px solid #ed0181;
+		padding:19px;
+		width: 100%;
+		margin:auto;
+	}
+	#pageMain li {
+		list-style:none;
+		line-height:22px;
+	}
+	#pageBox {
+		padding:10px 0 0 0;
+	}
+	#pageBox span {
+		display:inline-block;
+		width:60px;
+		height:24px;
+		line-height:24px;
+		text-align:center;
+		color:#fff;
+		background:#08a586;
+	}
+	#pageNav {
+		display:inline-block;
+	}
+	#pageNav a {
+		display:inline-block;
+		width:24px;
+		height:24px;
+		line-height:24px;
+		text-align:center;
+		color:#3a87ad;
+		text-decoration:none;
+	}
+	#pageNav a.active,#pageNav a:hover {
+		background:#3a87ad;
+		color:#EFEFEF;
+	}
+	#prev:hover {
+		cursor:pointer;
+	}
+	#next:hover {
+		cursor:pointer;
+	}
+
+</style>
+
+<script>
+	$(document).ready(function() {
+		/*分页*/
+		$(function() {
+			tabPage({
+				pageMain: '#pageMain',
+				pageNav: '#pageNav',
+				pagePrev: '#prev',
+				pageNext: '#next',
+				curNum: 5,
+				/*每页显示的条数*/
+				activeClass: 'active',
+				/*高亮显示的class*/
+				ini: 0 /*初始化显示的页面*/
+			});
+
+			function tabPage(tabPage) {
+
+				var pageMain = $(tabPage.pageMain);
+				/*获取内容列表*/
+				var pageNav = $(tabPage.pageNav);
+				/*获取分页*/
+				var pagePrev = $(tabPage.pagePrev);
+				/*上一页*/
+				var pageNext = $(tabPage.pageNext);
+				/*下一页*/
+
+
+				var curNum = tabPage.curNum;
+				/*每页显示数*/
+				var len = Math.ceil(pageMain.find("tr").length / curNum);
+				/*计算总页数*/
+
+				var pageList = '';
+				/*生成页码*/
+				var iNum = 0;
+				/*当前的索引值*/
+
+				for (var i = 0; i < len; i++) {
+					pageList += '<a href="javascript:;">' + (i + 1) + '</a>';
+				}
+				pageNav.html(pageList);
+				/*头一页加高亮显示*/
+				pageNav.find("a:first").addClass(tabPage.activeClass);
+
+				/*******标签页的点击事件*******/
+				pageNav.find("a").each(function() {
+					$(this).click(function() {
+						pageNav.find("a").removeClass(tabPage.activeClass);
+						$(this).addClass(tabPage.activeClass);
+						iNum = $(this).index();
+						$(pageMain).find("tr").hide();
+						for (var i = ($(this).html() - 1) * curNum; i < ($(this).html()) * curNum; i++) {
+							$(pageMain).find("tr").eq(i).show()
+						}
+
+					});
+				})
+
+
+				$(pageMain).find("tr").hide();
+				/************首页的显示*********/
+				for (var i = 0; i < curNum; i++) {
+					$(pageMain).find("tr").eq(i).show()
+				}
+
+
+				/*下一页*/
+				pageNext.click(function() {
+					$(pageMain).find("tr").hide();
+					if (iNum == len - 1) {
+						alert('已经是最后一页');
+						for (var i = (len - 1) * curNum; i < len * curNum; i++) {
+							$(pageMain).find("tr").eq(i).show()
+						}
+						return false;
+					} else {
+						pageNav.find("a").removeClass(tabPage.activeClass);
+						iNum++;
+						pageNav.find("a").eq(iNum).addClass(tabPage.activeClass);
+						//                    ini(iNum);
+					}
+					for (var i = iNum * curNum; i < (iNum + 1) * curNum; i++) {
+						$(pageMain).find("tr").eq(i).show()
+					}
+				});
+				/*上一页*/
+				pagePrev.click(function() {
+					$(pageMain).find("tr").hide();
+					if (iNum == 0) {
+						alert('当前是第一页');
+						for (var i = 0; i < curNum; i++) {
+							$(pageMain).find("tr").eq(i).show()
+						}
+						return false;
+					} else {
+						pageNav.find("a").removeClass(tabPage.activeClass);
+						iNum--;
+						pageNav.find("a").eq(iNum).addClass(tabPage.activeClass);
+					}
+					for (var i = iNum * curNum; i < (iNum + 1) * curNum; i++) {
+						$(pageMain).find("tr").eq(i).show()
+					}
+				})
+
+			}
+
+		})
+
+		/*基本页面*/
+		/*添加菜*/
+		$("#pageMain").delegate("#my_modal","click",
+				function(){
+					$("#insertId").val($(this).val());
+					$("#my_modal_active").click();
+					alert($("#insertId").value())
+					return false;
+				}
+		)
+		/*删除菜*/
+		$("#pageMain").delegate("#my_delete","click",
+				function(){
+					$("form").attr("action","/deleteMenu");
+					$("#insertId").val($(this).val());
+					$("#myModalLabel").html("提示");
+					$("#myMsg").html("确认要删除吗？")
+					$("#myMsg").css({"display":"inline"});
+					$("#insertNum").css({"display":"none"})
+					$("#my_modal_active").click();
+					alert($("#insertId").value())
+					return false;
+				}
+		)
+
+		$(function() {
+			// initialize scrollable
+			$(".scrollable").scrollable();
+		});
+
+		/*定时刷新*/
+		setInterval(function refleshTable(){
+
+			$.ajax({
+						url: "/checkMenu",
+						type: "GET",
+						success: function (result) {
+							if (result.code == 100) {
+								$("#myReflush").html("无需刷新");
+							} else {
+								$("#myReflush").html("可刷新数据");
+								$("#myReflush").removeAttr("disabled");
+
+							}
+						}
+					}
+			);
+		},10000);
+		$("#myReflush").click(function () {
+			location.reload();
+		})
+
+		$("#submit_form").click(function () {
+			if(isNaN($("#insertNum").val())){
+				return false;
+			}
+		})
+
+	});
+</script>
+<body>
+<div class="top">
+	<div class="wrap">
+		<div class="top-l left">欢迎光临:
+			<a href="" th:text="${user.rname}" class="top-login">登录</a>
+			<a href="" th:if="${user.rname == null}">免费注册</a>
+		</div>
+		<ul class="top-m right">
+			<li>
+				<a href=""><i class="top-car left"></i>购物车</a>
+			</li>
+			<li class="line"></li>
+			<li>
+				<a href="">我的订单</a>
+			</li>
+			<li class="line"></li>
+
+			<li class="line"></li>
+			<li>
+				<a href=""><i class="top-tel left"></i>手机</a>
+			</li>
+			<li class="line"></li>
+			<li class="on" style="width: 69px;">
+				<a href="" class="menu-btn">我的</a>
+				<ul class="topDown">
+					<li>
+						<a href="">我的积分</a>
+					</li>
+					<li>
+						<a href="">我的收藏</a>
+					</li>
+					<li>
+						<a href="">我的余额</a>
+					</li>
+					<li>
+						<a href="">我的评论</a>
+					</li>
+					<li>
+						<a href="">电子书架</a>
+					</li>
+				</ul>
+			</li>
+			<li class="line"></li>
+			<li>
+
+			</li>
+			<li class="line"></li>
+			<li>
+				<a href="" class="menu-btn">客户服务</a>
+			</li>
+			<li class="line"></li>
+		</ul>
+		<div class="clearfix"></div>
+	</div>
+</div>
+
+<div class="nav-box" style="margin-top: 30px;">
+	<div class="wrap" style="width: 725px;background: #fff">
+		<ul class="nav-ul">
+			<li class="all">
+				<a href="">我的库存</a>
+			</li>
+			<li>
+				<a th:href="@{/wareHouse/}">仓库统计</a>
+			</li>
+			<li>
+				<a th:href="@{/showpping/}">商店大全</a>
+			</li>
+			<li>
+				<a  th:href="@{/}" >今日利润</a>
+			</li>
+			<li>
+				<a href="">营业设置</a>
+			</li>
+
+			<li>
+				<a href="">用户订单</a>
+			</li>
+			<li>
+				<a href="">用户建议</a>
+			</li>
+
+			<div class="clearfix"></div>
+		</ul>
+	</div>
+	<div style="margin:0 auto; width: 634px; height:120px;">
+		<!-- "previous page" action -->
+		<a class="prev browse left"></a>
+
+		<!-- 滚动图片框容器 -->
+		<div class="scrollable" id="scrollable">
+			<!--滚动图片框 -->
+			<div class="items">
+				<!-- 1-4 -->
+				<div>
+					<img th:src="@{/merchant/img/17406501f7b044c280ad6f58406ce0a4.jpg!sswm.jpg}"/>
+					<img th:src="@{/merchant/img/2c5788e8b0dc4656b73b8625a7bfafa7.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/3e0c3a358ad844ad922ab80b5a420283.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/503619ca4c2345bbb504b34bf66fbc93.jpg!sswm.jpg}" />
+				</div>
+				<!-- 5-8 -->
+				<div>
+
+					<img th:src="@{/merchant/img/17406501f7b044c280ad6f58406ce0a4.jpg!sswm.jpg}"/>
+					<img th:src="@{/merchant/img/2c5788e8b0dc4656b73b8625a7bfafa7.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/3e0c3a358ad844ad922ab80b5a420283.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/503619ca4c2345bbb504b34bf66fbc93.jpg!sswm.jpg}" />
+				</div>
+				<!-- 5-8 -->
+				<div>
+
+					<img th:src="@{/merchant/img/17406501f7b044c280ad6f58406ce0a4.jpg!sswm.jpg}"/>
+					<img th:src="@{/merchant/img/2c5788e8b0dc4656b73b8625a7bfafa7.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/3e0c3a358ad844ad922ab80b5a420283.jpg!sswm.jpg}" />
+					<img th:src="@{/merchant/img/503619ca4c2345bbb504b34bf66fbc93.jpg!sswm.jpg}" />
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- "next page" action -->
+		<a class="next browse right">下一道菜</a>
+	</div>
+
+</div>
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<div id="containet">
+	<table class="table table-bordered" id="pageMain">
+		<tr class="active">
+			<td >菜式编号</td>
+			<td>菜式名字</td>
+			<td>菜式库存</td>
+			<td>菜式成本</td>
+
+		</tr>
+		<tr class="warning" th:each="one : ${pageInfo.list}">
+			<td th:text="${one.id}">空</td>
+			<td th:text="${one.mname}">空</td>
+			<td th:text="${one.number}">空</td>
+			<td th:text="${one.price}">空</td>
+			<td style="width: 10px;">
+					<button id="my_modal" th:value="${one.id}" type="button" class="btn btn-success">添加</button>
+			</td>
+			<td style="width: 10px;">
+				<button id="my_delete" th:value="${one.id}" type="button" class="btn btn-danger">删除</button>
+			</td>
+		</tr>
+
+
+
+		<div id="pageBox">
+			<span id="prev">上一页</span>
+			<ul id="pageNav"></ul>
+			<span id="next">下一页</span>
+
+		</div>
+
+
+	</table>  </div>
+<div id="msg" th:text="${session.msg}" style="color: white; font-size: 50px"></div>
+<br />
+<button id="myReflush" type="button" class="btn btn-default btn-lg" style="float: right" disabled="disabled">无须刷新</button>
+
+<!-- Button trigger modal -->
+<button id="my_modal_active" type="button" style="display: none;"  class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"  >
+	Launch demo modal
+</button>
+
+<!-- Modal -->
+<div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4  class="modal-title" id="myModalLabel">请输入你要添加的数量</h4>
+			</div>
+			<form  action="/insertMenu" method="get">
+			<div class="modal-body">
+					<div class="form-group">
+						<input type="text" id="insertNum" name="insertNum" class="form-control" placeholder="不能输入非数字">
+						<input hidden="hidden" type="text" name="insertId" id="insertId">
+					</div>
+					<h3 id="myMsg" style="display: none">删除</h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<input id="submit_form" type="submit" class="btn btn-primary" value="submit"></input>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+
+</html>

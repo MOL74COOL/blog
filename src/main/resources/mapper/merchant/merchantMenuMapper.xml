@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songtian.restaurant.mapper.merchant.merchantMenuMapper">
+    <select id="selectAll" resultType="com.songtian.restaurant.bean.merchant.menu">
+		select* from menu_merchant
+	</select>
+	<select id="selectById" resultType="com.songtian.restaurant.bean.merchant.menu">
+		select* from menu_merchant where id=#{id}
+	</select>
+	<select id="selectStockout" resultType="com.songtian.restaurant.bean.merchant.menu">
+		SELECT *FROM menu_merchant WHERE #{number}>number
+	</select>
+	<update id="updateMenuNumber">
+		update menu_merchant set number =number+#{number } where id=#{id}
+	</update>
+	<delete id="deleteMenu">
+		delete from menu_merchant where id=#{id}
+	</delete>
+	<select id="selectHot" resultType="com.songtian.restaurant.bean.merchant.menu">
+		SELECT * FROM menu_merchant ORDER BY number DESC LIMIT 3
+	</select>
+
+</mapper>

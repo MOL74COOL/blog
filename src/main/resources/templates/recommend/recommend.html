@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>recommend</title>
+    <link rel="stylesheet" th:href="@{/recommend/css/recommend.css}">
+    <link rel="stylesheet" th:href="@{/recommend/css/show.css}">
+</head>
+<body>
+<div class="menuHolder">
+    <div class="menuWindow">
+        <ul class="p1">
+            <li class="s1"><a href="javascript:;">导航菜单</a>
+                <ul id="p2" class="p2">
+                    <li class="s2"><a style="transform: rotate(0deg);" href="/selectLow"><span>店主推荐</span></a>
+                    </li>
+                    <li class="s2"><a style="transform: rotate(27deg);" href="/recommend/selectAll"><span>销量排行</span></a>
+                    </li>
+                    <li class="s2"><a style="transform: rotate(54deg);" href="/Toinfo:;"><span>联系店主</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    var menu = [
+        {title: '店主推荐',},
+        {title: '销量排行',},
+        {title: '咨询店主',}
+    ]
+    renderMenu(menu)
+    function renderMenu(menu) {
+        var lis = ''
+        const deg = 90
+        var p2 = document.getElementById('p2')
+        for (var i = 0; i < menu.length; i++) {
+            var sublis = ''
+            var rotateDeg = deg / menu.length
+            for (var j = 0; j < menu[i].subtitle.length; j++) {
+                var subrotateDeg = deg / menu[i].subtitle.length
+                var lineHeight = 600/menu[i].subtitle.length + 40
+                sublis += '<li>' +
+                    '<a style="transform: rotate(' + (subrotateDeg * j) + 'deg);line-height:'+lineHeight+'px" href="javascript:;">' +
+                    '<span>' + menu[i].subtitle[j] + '</span>' + '</a>' + '</li>'
+            }
+            var ul = ' <ul class="p3 a' + menu[i].subtitle.length + '">' + sublis + '</ul>'
+            lis += '<li class="s2">' +
+                '<a style="transform: rotate(' + (rotateDeg * i) + 'deg);" href="javascript:;"><span>' + menu[i].title + '</span></a>' +
+                '' + ul + '' + '</li>'
+        }
+        p2.innerHTML = lis
+    }
+</script>
+
+<div class="row" align="center">
+    <div class="col-md-12">
+        <div class="alert alert-success">
+            <table border="2" align="center">
+                <tr>
+                    <td>商品名字</td>
+                    <td>外观展示</td>
+                    <td>总共售出</td>
+                </tr>
+                <tr th:each ="i:${menuInfo}">
+                    <td th:text = "${i.name}"></td>
+                    <td><img th:src = "${i.url}"> </td>
+                    <td th:text = "${i.number}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

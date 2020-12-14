@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的信息</title>
+    <script src="../../static/takeaway/js/jquery.js" th:src="@{/takeaway/js/jquery.js}"></script>
+    <script src="../../static/takeaway/js/index.js" th:src="@{/takeaway/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/takeaway/css/index.css}"/>
+
+</head>
+<body>
+<!--引用header-->
+<div th:include="/takeaway/header.html"></div>
+
+<div id="midle">
+    <div id="midle-top"></div>
+    <div style="margin-left: 45%; margin-top: 50px">
+        <p>姓名：<span th:text="${session.user.rname}"></span></p>
+        <p>账号：0<span th:text="${session.user.id}"></span></p>
+        <p>电话：<span th:text="${session.user.tel}"></span></p>
+        <p>地址：<span th:text="${session.user.address}"></span></p>
+        <p>工资：<span th:text="${session.user.sales}"></span></p>
+    </div>
+</div>
+
+
+</div>
+
+<!--引用footer-->
+<div th:include="/takeaway/footer.html"></div>
+
+</body>
+</html>

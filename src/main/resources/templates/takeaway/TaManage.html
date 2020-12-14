@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>外卖管理界面</title>
+    <script src="../../static/takeaway/js/jquery.js" th:src="@{/takeaway/js/jquery.js}"></script>
+    <script src="../../static/takeaway/js/index.js" th:src="@{/takeaway/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/takeaway/css/index.css}"/>
+
+</head>
+<body>
+<!--引用header-->
+<div th:include="/takeaway/header.html"></div>
+
+<div id="midle">
+    <div id="midle-top"></div>
+    <div>
+        <table border="1px">
+            <tr bgcolor="#f7f73e">
+                <th width="8%">id</th>
+                <th width="14%">菜名</th>
+                <th width="14%">客户名</th>
+                <th width="18%">电话</th>
+                <th width="18%">地址</th>
+                <th width="8%">操作</th>
+
+            </tr>
+
+
+            <tr th:if="${session.takeMeuns.size() != 0}" th:each="takeMeun:${session.takeMeuns}">
+                <td width="8%" th:text="${takeMeun.id}"></td>
+                <td width="14%" th:text="${takeMeun.mname}"></td>
+                <td width="14%" th:text="${takeMeun.rname}"></td>
+                <td width="18%" th:text="${takeMeun.phone}"></td>
+                <td width="18%" th:text="${takeMeun.address}"></td>
+                <th width="8%"><a th:href="@{/updateTaServlet(id=${takeMeun.id})}" onclick="return confirm(' 确定抢单？')">
+                    <img th:src="@{/takeaway/images/1.jpg}"/>抢单</a>
+                </th>
+            </tr>
+
+            <tr th:if="${session.takeMeuns.size() == 0}">
+                <td colspan="6">
+                    抱歉！没有可抢得外卖订单
+                </td>
+            </tr>
+
+            <tr bgcolor="#f7f73e">
+                <td colspan="6">
+                    <div style="float: left">
+                        <a th:href="@{/taMenuServlet(page=${#request.getAttribute('page')-1})}">上一页</a>
+                        <a th:href="@{/taMenuServlet(page=${#request.getAttribute('page')+1})}">下一页</a>
+                    </div>
+                    <div style="float: right">
+                        订单总量为：
+                        <span th:text="${#request.getAttribute('taNum')}"></span>
+                        &nbsp;条&nbsp;&nbsp;
+                        当前为第：
+                        <span th:text="${#request.getAttribute('page')}"></span>
+                        页
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div th:include="/takeaway/footer.html"></div>
+</body>
+</html>

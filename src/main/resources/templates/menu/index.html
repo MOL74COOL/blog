@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>购物车</title>
+    </head>
+    <link rel="stylesheet" th:href="@{/menu/css/reset.css}">
+
+    <link rel="stylesheet" th:href="@{/menu/css/carts.css}">
+    <script th:src="@{/menu/js/jquery-1.11.0.min.js}"></script>
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script th:src="@{/menu/js/carts.js}"></script>
+    <style>
+        .button {
+            border: 0px;
+            background-color: transparent;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".button").focus(function() {
+                var totalMoney = document.getElementById("totalMoney").innerHTML;
+                document.getElementById("accept").value = totalMoney;
+
+                var totalNumber = document.getElementById("totalNumber").innerHTML;
+                document.getElementById("accept0").value = totalNumber;
+            })
+
+            $("#checkbox2").click(function() {
+
+                var sum_price1 = document.getElementById("sum_price1").innerHTML;
+                document.getElementById("input1").value = sum_price1;
+            })
+
+            $("#checkbox3").click(function() {
+                var sum_price2 = document.getElementById("sum_price2").innerHTML;
+                document.getElementById("input2").value = sum_price2;
+            })
+
+            $("#checkbox4").click(function() {
+                var sum_price3 = document.getElementById("sum_price3").innerHTML;
+                document.getElementById("input4").value = sum_price3;
+            })
+
+            $("#checkbox5").click(function() {
+                var sum_price4 = document.getElementById("sum_price4").innerHTML;
+                document.getElementById("input5").value = sum_price4;
+            })
+
+            $("#checkbox6").click(function() {
+                var sum_price5 = document.getElementById("sum_price5").innerHTML;
+                document.getElementById("input3").value = sum_price5;
+            })
+
+        })
+    </script>
+
+    <body>
+        <section class="cartMain">
+
+            <form action="/myServlet" method="post">
+                <div class="cartBox">
+                    <div class="shop_info">
+                        <div class="all_check">
+                            <!--店铺全选-->
+
+                            <input type="checkbox" id="shop_a" class="shopChoice">
+                            <label for="shop_a" class="shop"></label>
+                        </div>
+                        <div class="shop_name">
+                            店铺：
+                            <a href="javascript:;">麦当劳</a>
+                        </div>
+                    </div>
+                    <div class="order_content">
+                        <ul class="order_lists">
+                            <li class="list_chk">
+                                <input type="checkbox" id="checkbox_2" class="son_check">
+                                <label for="checkbox_2" id="checkbox2"></label>
+                            </li>
+                            <li class="list_con">
+                                <div class="list_img">
+                                    <a href="javascript:;"><img th:src="${session.menu.url}" alt=""></a>
+                                </div>
+                                <div class="list_text">
+                                    <a href="javascript:;"><span th:text="${session.menu.name}"></span></a>
+                                </div>
+                            </li>
+                            <li class="list_info">
+                                <p>规格：默认</p>
+                                <p>尺寸：16*16*3(cm)</p>
+                            </li>
+                            <li class="list_price">
+                                <p class="price" id="price1">￥32</p>
+                            </li>
+                            <li class="list_amount">
+                                <div class="amount_box">
+                                    <a href="javascript:;" class="reduce reSty">-</a>
+                                    <input name="1" type="text" value="1" class="sum">
+                                    <a href="javascript:;" class="plus">+</a>
+                                </div>
+                            </li>
+                            <li class="list_sum">
+                                <p class="sum_price" id="sum_price1">￥32</p>
+                                <input type="hidden" id="input1" name="sum_price1" value="">
+                            </li>
+                            <li class="list_op">
+                                <p class="del">
+                                    <a href="javascript:;" class="delBtn">移除商品</a>
+                                </p>
+                            </li>
+                        </ul>
+                        <ul class="order_lists">
+                            <li class="list_chk">
+                                <input type="checkbox" id="checkbox_3" class="son_check">
+                                <label for="checkbox_3" id="checkbox3"></label>
+                            </li>
+                            <li class="list_con">
+                                <div class="list_img">
+                                    <a href="javascript:;"><img th:src="${session.menu1.url}" alt=""></a>
+                                </div>
+                                <div class="list_text">
+                                    <a href="javascript:;"><span th:text="${session.menu1.name}"></span></a>
+                                </div>
+                            </li>
+                            <li class="list_info">
+                                <p>规格：默认</p>
+                                <p>尺寸：16*16*3(cm)</p>
+                            </li>
+                            <li class="list_price">
+                                <p class="price" id="price2">￥78</p>
+                            </li>
+                            <li class="list_amount">
+                                <div class="amount_box">
+                                    <a href="javascript:;" class="reduce reSty">-</a>
+                                    <input name="2" type="text" value="1" class="sum">
+                                    <a href="javascript:;" class="plus">+</a>
+                                </div>
+                            </li>
+                            <li class="list_sum">
+                                <p class="sum_price" id="sum_price2">￥78</p>
+                                <input type="hidden" id="input2" name="sum_price2" value="">
+                            </li>
+                            <li class="list_op">
+                                <p class="del">
+                                    <a href="javascript:;" class="delBtn">移除商品</a>
+                                </p>
+                            </li>
+                        </ul>
+                        <ul class="order_lists">
+                            <li class="list_chk">
+                                <input type="checkbox" id="checkbox_6" class="son_check">
+                                <label for="checkbox_6" id="checkbox6"></label>
+                            </li>
+                            <li class="list_con">
+                                <div class="list_img">
+                                    <a href="javascript:;"><img th:src="${session.menu2.url}" alt=""></a>
+                                </div>
+                                <div class="list_text">
+                                    <a href="javascript:;"><span th:text="${session.menu2.name}"></span></a>
+                                </div>
+                            </li>
+                            <li class="list_info">
+                                <p>规格：默认</p>
+                                <p>尺寸：16*16*3(cm)</p>
+                            </li>
+                            <li class="list_price">
+                                <p class="price" id="price3">￥38</p>
+                            </li>
+                            <li class="list_amount">
+                                <div class="amount_box">
+                                    <a href="javascript:;" class="reduce reSty">-</a>
+                                    <input name="3" type="text" value="1" class="sum">
+                                    <a href="javascript:;" class="plus">+</a>
+                                </div>
+                            </li>
+                            <li class="list_sum">
+                                <p class="sum_price" id="sum_price3">￥38</p>
+                                <input type="hidden" id="input3" name="sum_price3" value="">
+                            </li>
+                            <li class="list_op">
+                                <p class="del">
+                                    <a href="javascript:;" class="delBtn">移除商品</a>
+                                </p>
+                            </li>
+                        </ul>
+                        <ul class="order_lists">
+                            <li class="list_chk">
+                                <input type="checkbox" id="checkbox_4" class="son_check">
+                                <label for="checkbox_4" id="checkbox4"></label>
+                            </li>
+                            <li class="list_con">
+                                <div class="list_img">
+                                    <a href="javascript:;"><img th:src="${session.menu3.url}" alt=""></a>
+                                </div>
+                                <div class="list_text">
+                                    <a href="javascript:;"><span th:text="${session.menu3.name}"></span></a>
+                                </div>
+                            </li>
+                            <li class="list_info">
+                                <p>规格：默认</p>
+                                <p>尺寸：16*16*3(cm)</p>
+                            </li>
+                            <li class="list_price">
+                                <p class="price" id="price4">￥20</p>
+                            </li>
+                            <li class="list_amount">
+                                <div class="amount_box">
+                                    <a href="javascript:;" class="reduce reSty">-</a>
+                                    <input name="4" type="text" value="1" class="sum">
+                                    <a href="javascript:;" class="plus">+</a>
+                                </div>
+                            </li>
+                            <li class="list_sum">
+                                <p class="sum_price" id="sum_price4">￥20</p>
+                                <input type="hidden" id="input4" name="sum_price4" value="">
+                            </li>
+                            <li class="list_op">
+                                <p class="del">
+                                    <a href="javascript:;" class="delBtn">移除商品</a>
+                                </p>
+                            </li>
+                        </ul>
+                        <ul class="order_lists">
+                            <li class="list_chk">
+                                <input type="checkbox" id="checkbox_5" class="son_check">
+                                <label for="checkbox_5" id="checkbox5"></label>
+                            </li>
+                            <li class="list_con">
+                                <div class="list_img">
+                                    <a href="javascript:;"><img th:src="${session.menu4.url}" alt=""></a>
+                                </div>
+                                <div class="list_text">
+                                    <a href="javascript:;"><span th:text="${session.menu4.name}"></span></a>
+                                </div>
+                            </li>
+                            <li class="list_info">
+                                <p>规格：默认</p>
+                                <p>尺寸：16*16*3(cm)</p>
+                            </li>
+                            <li class="list_price">
+                                <p class="price" id="price5">￥11</p>
+                            </li>
+                            <li class="list_amount">
+                                <div class="amount_box">
+                                    <a href="javascript:;" class="reduce reSty">-</a>
+                                    <input name="5" type="text" value="1" class="sum">
+                                    <a href="javascript:;" class="plus">+</a>
+                                </div>
+                            </li>
+                            <li class="list_sum">
+                                <p class="sum_price" id="sum_price5">￥11</p>
+                                <input type="hidden" id="input5" name="sum_price5" value="">
+                            </li>
+                            <li class="list_op">
+                                <p class="del">
+                                    <a href="javascript:;" class="delBtn">移除商品</a>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                </div>
+                <!--底部-->
+                <div class="bar-wrapper">
+                    <div class="bar-right">
+                        <div class="piece">已选商品<strong class="piece_num" id="totalNumber">0</strong>件</div>
+                        <input id="accept0" type="hidden" name="totalNumber" value="" />
+                        <div class="totalMoney">共计: <strong id="totalMoney" class="total_text">0.00</strong></div>
+                        <input id="accept" type="hidden" name="totalMoney" value="" />
+                        <div class="calBtn">
+                            <a href="javascript:;"><input class="button" type="submit" value="结算" /></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </section>
+        <section class="model_bg"></section>
+        <section class="my_model">
+            <p class="title">删除宝贝<span class="closeModel">X</span></p>
+            <p>您确认要删除该宝贝吗？</p>
+            <div class="opBtn">
+                <a href="javascript:;" class="dialog-sure">确定</a>
+                <a href="javascript:;" class="dialog-close">关闭</a>
+            </div>
+        </section>
+
+    </body>
+
+</html>

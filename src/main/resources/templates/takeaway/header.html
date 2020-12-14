@@ -1,0 +1,70 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+    #exit{
+        color:cornflowerblue;
+    }
+</style>
+<div id="header">
+    <div id="header-top">
+        <div id="register">
+            &nbsp;&nbsp;外卖员：
+            <span th:text="${session.user.rname}"></span>
+            &nbsp;&nbsp;
+            <span th:if="${session.user != null}">
+                <a id="exit" th:href="@{/exitServlet}" >
+                    注销
+                </a>
+            </span>
+        </div>
+        <div id="title">欢迎光临</div>
+        <div id="Date"></div>
+    </div>
+    <div id="header-middle"></div>
+    <div id="header-bottom">
+        <!--导航栏开始-->
+        <ul id="nav">
+
+            <li class="jquery_out">
+                <div class="jquery_inner">
+                    <div class="jquery">
+                        <span class="text">导航菜单</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="mainlevel" id="mainlevel_01">
+                <a th:href="@{/taMenuServlet}" target="_blank">外卖</a>
+
+            </li>
+
+            <li class="mainlevel" id="mainlevel_02">
+                <a th:href="@{/myTakeawayServlet}" target="_blank">我的订单</a>
+            </li>
+
+            <li class="mainlevel" id="mainlevel_04">
+                <a th:href="@{/oldTaServlet}" target="_blank">历史订单</a>
+            </li>
+
+            <li class="mainlevel" id="mainlevel_03">
+                <a th:href="@{/myMessage}">我的信息</a>
+            </li>
+
+            <li class="mainlevel" id="mainlevel_05">
+                <a href="" target="_blank">关于我们</a>
+                <ul id="sub_05">
+                    <li>
+                        <a href="#" target="_blank">企业文化</a>
+                    </li>
+                    <li>
+                        <a href="24.html" target="_blank">加入我们</a>
+                    </li>
+
+
+                </ul>
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+<!--导航栏结束-->

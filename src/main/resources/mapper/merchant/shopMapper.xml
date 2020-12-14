@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.songtian.restaurant.mapper.merchant.shopMapper">
+    <select id="selectAll" resultType="com.songtian.restaurant.bean.merchant.menuShop">
+		select* from shop
+	</select>
+    <select id="selectByType" resultType="com.songtian.restaurant.bean.merchant.menuShop">
+		select* from shop where type=#{type}
+	</select>
+</mapper>

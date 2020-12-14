@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>外卖欢迎界面</title>
+    <script src="../../static/takeaway/js/jquery.js" th:src="@{/takeaway/js/jquery.js}"></script>
+    <script src="../../static/takeaway/js/index.js" th:src="@{/takeaway/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/takeaway/css/index.css}"/>
+
+</head>
+<body>
+<!--引用header-->
+<div th:include="/takeaway/header.html"></div>
+
+<div id="midle1">
+    <script src="../../static/takeaway/js/adBanner.js" th:src="@{/takeaway/js/adBanner.js}"></script>
+
+</div>
+
+<!--引用footer-->
+<div th:include="/takeaway/footer.html"></div>
+
+</body>
+</html>

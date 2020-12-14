@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>历史订单界面</title>
+    <script src="../../static/takeaway/js/jquery.js" th:src="@{/takeaway/js/jquery.js}"></script>
+    <script src="../../static/takeaway/js/index.js" th:src="@{/takeaway/js/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/takeaway/css/index.css}"/>
+
+</head>
+<body>
+<!--引用header-->
+<div th:include="/takeaway/header.html"></div>
+
+<div id="midle">
+    <div id="midle-top"></div>
+    <div>
+        <table border="1px">
+            <tr bgcolor="#f7f73e">
+                <th width="8%">id</th>
+                <th width="14%">菜名</th>
+                <th width="14%">客户名</th>
+                <th width="18%">电话</th>
+                <th width="18%">地址</th>
+                <th width="20%">送达时间</th>
+
+            </tr>
+            <!--之所以会报错是因为session没有takeMenu-->
+            <tr th:if="${session.oldTakeaways.size() != 0}" th:each="oldTakeaway:${session.oldTakeaways}">
+                <td width="8%" th:text="${oldTakeaway.id}"></td>
+                <td width="14%" th:text="${oldTakeaway.mname}"></td>
+                <td width="14%" th:text="${oldTakeaway.rname}"></td>
+                <td width="18%" th:text="${oldTakeaway.phone}"></td>
+                <td width="18%" th:text="${oldTakeaway.address}"></td>
+                <td width="20%" th:text="${oldTakeaway.time}"></td>
+            </tr>
+
+            <tr th:if="${session.oldTakeaways.size() == 0}">
+                <td colspan="6">
+                    您没有送单记录！
+                </td>
+            </tr>
+
+            <tr bgcolor="#f7f73e">
+                <td colspan="6">
+                    <div style="float: left">
+                        <a th:href="@{/oldTaServlet(page=${#request.getAttribute('page')-1})}">上一页</a>
+                        <a th:href="@{/oldTaServlet(page=${#request.getAttribute('page')+1})}">下一页</a>
+                    </div>
+                    <div style="float: right">
+                        订单总量为：
+                        <span th:text="${#request.getAttribute('oldTaNum')}"></span>
+                        &nbsp;条&nbsp;&nbsp;
+                        当前为第：
+                        <span th:text="${#request.getAttribute('page')}"></span>
+                        页
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+</div>
+
+<div th:include="/takeaway/footer.html"></div>
+</body>
+</html>

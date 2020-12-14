@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品展示</title>
+    <link rel="stylesheet" th:href="@{/recommend/css/index.css}">
+    <link rel="stylesheet" th:href="@{/recommend/css/show.css}">
+    <link rel="stylesheet" th:href="@{/recommend/css/swiper.css}">
+    <script th:src="@{/recommend/js/jquery.min.js}"></script>
+    <script th:src="@{/recommend/js/jquery-1.10.0.2.js}"></script>
+    <script th:src="@{/recommend/js/swiper.min.js}"></script>
+
+</head>
+
+<body>
+<div class="menuHolder">
+    <div class="menuWindow">
+        <ul class="p1">
+            <li class="s1"><a href="javascript:;">导航菜单</a>
+                <ul id="p2" class="p2">
+                    <li class="s2"><a style="transform: rotate(0deg);" href="/selectLow"><span>店主推荐</span></a>
+                    </li>
+                    <li class="s2"><a style="transform: rotate(27deg);" href="/recommend/selectAll"><span>销量排行</span></a>
+                    </li>
+                    <li class="s2"><a style="transform: rotate(54deg);" href="/Toinfo"><span>联系店主</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    var menu = [
+        {title: '店主推荐',},
+        {title: '销量排行',},
+        {title: '咨询店主',}
+    ]
+    renderMenu(menu)
+    function renderMenu(menu) {
+        var lis = ''
+        const deg = 90
+        var p2 = document.getElementById('p2')
+        for (var i = 0; i < menu.length; i++) {
+            var sublis = ''
+            var rotateDeg = deg / menu.length
+            for (var j = 0; j < menu[i].subtitle.length; j++) {
+                var subrotateDeg = deg / menu[i].subtitle.length
+                var lineHeight = 600/menu[i].subtitle.length + 40
+                sublis += '<li>' +
+                    '<a style="transform: rotate(' + (subrotateDeg * j) + 'deg);line-height:'+lineHeight+'px" href="javascript:;">' +
+                    '<span>' + menu[i].subtitle[j] + '</span>' + '</a>' + '</li>'
+            }
+            var ul = ' <ul class="p3 a' + menu[i].subtitle.length + '">' + sublis + '</ul>'
+            lis += '<li class="s2">' +
+                '<a style="transform: rotate(' + (rotateDeg * i) + 'deg);" href="javascript:;"><span>' + menu[i].title + '</span></a>' +
+                '' + ul + '' + '</li>'
+        }
+        p2.innerHTML = lis
+    }
+</script>
+
+<header>店主推荐</header>
+<div id="app">
+    <div class="box" th:each="i:${menuLowInfo}">
+        <div class="imgBox">
+            <img th:src="${i.url}"/>
+        </div>
+        <span class="source" th:text="${i.number}">hot</span>
+        <h2 class="title" th:text="${i.name}">套餐a</h2>
+        </a>
+    </div>
+</div>
+
+<div class="swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-free-mode" id="case4" style="cursor: grab;">
+    <div class="swiper-wrapper" style="transform: translate3d(-875px, 0px, 0px); transition-duration: 1000ms;">
+        <div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-slide-index="2" style="width: 175px;">
+            <img th:src="@{/recommend/images/t3.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="3" style="width: 175px;">
+            <img th:src="@{/recommend/images/t4.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="4" style="width: 175px;">
+            <img th:src="@{/recommend/images/t1.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="5" style="width: 175px;">
+            <img th:src="@{/recommend/images/t2.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-prev" data-swiper-slide-index="0" style="width: 175px;">
+            <img th:src="@{/recommend/images/t3.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-active" data-swiper-slide-index="1" style="width: 175px;">
+            <img th:src="@{/recommend/images/t4.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-next" data-swiper-slide-index="2" style="width: 175px;">
+            <img th:src="@{/recommend/images/t2.jpg}"/></div>
+        <div class="swiper-slide" data-swiper-slide-index="3" style="width: 175px;">
+            <img th:src="@{/recommend/images/a6.jpg}"/></div>
+        <div class="swiper-slide" data-swiper-slide-index="4" style="width: 175px;">
+            <img th:src="@{/recommend/images/t1.jpg}"/></div>
+        <div class="swiper-slide" data-swiper-slide-index="5" style="width: 175px;">
+            <img th:src="@{/recommend/images/t2.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-prev" data-swiper-slide-index="0" style="width: 175px;">
+            <img th:src="@{/recommend/images/t3.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" data-swiper-slide-index="1" style="width: 175px;">
+            <img th:src="@{/recommend/images/t4.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-slide-index="2" style="width: 175px;">
+            <img th:src="@{/recommend/images/t2.jpg}"/></div>
+        <div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="3" style="width: 175px;">
+            <img th:src="@{/recommend/images/a6.jpg}"/></div>
+    </div>
+
+    <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets">
+        <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span>
+        <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 2"></span>
+        <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span>
+        <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 4"></span>
+        <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 5"></span>
+        <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 6"></span>
+    </div>
+
+    <div class="swiper-scrollbar" style="opacity: 1; transition-duration: 400ms;">
+        <div class="swiper-scrollbar-drag" style="width: 196px; transform: translate3d(245px, 0px, 0px); transition-duration: 1000ms;"></div>
+    </div>
+    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+    <p>滑动展示</p>
+<script type="text/javascript">
+    $(function(){
+        var swiper = new Swiper ('#case4', {
+            loop : true,       //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+            slidesPerView :4,   // 设置显示三张
+            //centeredSlides : true,     //使当前图片居中显示
+            freeMode:true,        // 使幻灯片滑动时不止滑动一格，且不会自动贴合
+            slidesPerGroup :1 ,   //定义1张图片为一组
+            autoplay: true,//可选选项，自动滑动
+            speed:1000,//设置过度时间
+            grabCursor: true,//鼠标样式根据浏览器不同而定
+            autoplay : {
+                delay:1,
+                disableOnInteraction: false,
+            },                 /*  设置每隔3000毫秒切换 */
+            <!-- 分页器 -->
+            pagination: {
+                el: '.swiper-pagination',
+                clickable :true,
+            },
+            scrollbar: {
+                el: '.swiper-scrollbar',
+                hide:true,
+            },
+        });
+        /* 鼠标悬停 停止动画 */
+        	$('.swiper-slide').mouseenter(function () {
+               swiper.autoplay.stop();
+            })
+            $('.swiper-slide').mouseleave(function () {
+               swiper.autoplay.start();
+            })
+    });
+</script>
+
+</body>
+</html>

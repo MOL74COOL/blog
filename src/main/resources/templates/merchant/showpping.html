@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>幻灯片式画廊</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script type="text/javascript" th:src="@{/merchant/js/jquery.js}"></script>
+		<link type="text/css" th:href="@{/merchant/css/jquery.ui.core.css}" rel="stylesheet" />
+        <link type="text/css" th:href="@{/merchant/css/jquery.ui.slider.css}" rel="stylesheet" />
+		<link rel="stylesheet" th:href="@{/merchant/css/style2.css}" type="text/css" media="screen"/>
+		
+        <style type="text/css">
+			span.reference{
+				font-family:微软雅黑;
+				position:fixed;
+				left:10px;
+				bottom:10px;
+				font-size:13px;
+			}
+			span.reference a{
+				color:#fff;
+				margin-right:20px;
+				text-transform:uppercase;
+			}
+			span.reference a:hover{
+				border-bottom:1px solid #ddd;
+			}
+		</style>
+		<script type="text/javascript" th:src="@{/merchant/js/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{/merchant/js/jquery.easing.1.3.js}"></script>
+		<script type="text/javascript">
+			$(function() {
+				//caching
+				// 画廊的主div元素容器
+				var $fp_gallery			= $('#fp_gallery')
+				//弹出的显示大图的div元素容器
+				var $fp_overlay			= $('#fp_overlay');
+				// 显示加载图片的div元素容器
+				var $fp_loading			= $('#fp_loading');
+				// 前移和后移按钮
+				var $fp_next			= $('#fp_next');
+				var $fp_prev			= $('#fp_prev');
+				//关闭按钮
+				var $fp_close			= $('#fp_close');
+				//缩略图div元素容器
+				var $fp_thumbContainer 	= $('#fp_thumbContainer');
+				//缩略图下方的滑动控制条div元素容器
+				var $fp_scrollWrapper	= $('#fp_scrollWrapper');
+				//图片数量
+				var nmb_images=0;
+				//选择画廊的索引
+				var gallery_idx=-1;
+				//画廊的滚动条div元素容器
+				var $fp_thumbScroller	= $('#fp_thumbScroller');
+				//缩略图下方的滑动控制条
+				var $slider				= $('#slider');
+				// 选择画廊（城市）的链接
+				var $fp_galleries		= $('#fp_galleryList > li');
+				// 当前 查看的图片
+				var current				= 0;
+
+				//some control flags:
+				//防止过快单击前移和后移按钮
+				var photo_nav			= true;
+
+				//单击城市/画廊的处理
+				$fp_galleries.bind('click',function(){
+					if($(this).html()=='返回首页'){
+						window.history.go(-1);
+					}
+					$fp_galleries.removeClass('current');  //将之前选择的城市/画廊链接移除'current'类
+					var $gallery 		= $(this);
+					$gallery.addClass('current');  //将单击的城市/画廊链接添加'current'类
+					var gallery_index 	= $gallery.index(); //记录画廊索引
+					if(gallery_idx == gallery_index) return;
+					gallery_idx			= gallery_index;
+					// 如果画廊已经打开
+					if($fp_thumbContainer.data('opened')==true){
+						$fp_scrollWrapper.fadeOut(); //原画廊滑动区域淡出
+						$fp_thumbContainer.stop()  //停止缩略图动画，然后滚动显示缩略图
+								.animate({'height':'0px'},200,function(){
+									openGallery($gallery); // 打开画廊
+								});
+					}
+					else// 如果画廊没有打开，则直接打开
+						openGallery($gallery);
+				});
+
+				//打开画廊
+				function openGallery($gallery){
+					//重置current变量
+					current				= 0;
+					//找到选择城市/画廊对应的div元素
+					var $fp_content_wrapper = $fp_thumbContainer.find('.container:nth-child('+parseInt(gallery_idx+1)+')');
+					//隐藏所有其他的画廊容器div元素
+					$fp_thumbContainer.find('.container').not($fp_content_wrapper).hide();
+					//显示选择城市/画廊对应的div元素
+					$fp_content_wrapper.show();
+					//图片数量
+					nmb_images			= $fp_content_wrapper.children('div').length;
+					//计算div元素的宽度和左右边距
+					var w_width 	= 0;
+					var padding_l	= 0;
+					var padding_r	= 0;
+					//屏幕中心
+					var center		= $(window).width()/2;
+					var one_divs_w  = 0;
+
+					// 处理画廊里所有子div元素
+					$fp_content_wrapper.children('div').each(function(i){
+						var $div 		= $(this);
+						var div_width	= $div.width();
+						w_width			+=div_width;
+						// t左边距等于屏幕中心-画廊里第1个子div元素的一半
+						if(i==0)
+							padding_l = center - (div_width/2);
+						//右边距等于屏幕中心-画廊里最后1个子div元素的一半
+						if(i==(nmb_images-1)){
+							padding_r = center - (div_width/2);
+							one_divs_w= div_width;
+						}
+					}).end().css({
+						'width'				: w_width + 'px',
+						'padding-left' 		: padding_l + 'px',
+						'padding-right' 	: padding_r + 'px'
+					});
+
+					//s所有图 向左滚动;
+					$fp_thumbScroller.scrollLeft(w_width);
+
+					//初始化滑动条
+					$slider.slider('destroy').slider({
+						orientation	: 'horizontal', //水平
+						max			: w_width -one_divs_w,// 最大宽度等于图片宽度之和-一个子div元素的宽度
+						min			: 0,
+						value		: 0,  // 初始位置
+						slide		: function(event, ui) {
+							$fp_thumbScroller.scrollLeft(ui.value); // 滑动时向左滑动
+						},
+						stop: function(event, ui) {
+							//停止滑动时，需要里中心最近的图片移动到中心
+							checkClosest();
+						}
+					});
+					// 打开画廊，并显示滑动块
+					$fp_thumbContainer.animate({'height':'240px'},200,function(){
+						$(this).data('opened',true);
+						$fp_scrollWrapper.fadeIn();
+					});
+
+					//向右滚动
+					$fp_thumbScroller.stop()
+							.animate({'scrollLeft':'0px'},2000,'easeInOutExpo');
+
+					//单击content div (图片)的处理
+					$fp_content_wrapper.find('.content')
+							.bind('click',function(e){
+								var $current 	= $(this);
+								//获得索引
+								current			= $current.index();
+								//图像居中
+								//第2个参数为true，表示将单击图片居中后，显示图片
+								centerImage($current,true,600);
+								e.preventDefault();
+							});
+				}
+
+				//  当画廊滑动时，滑动块也滑动
+				$fp_thumbScroller.scroll(function(){
+					$slider.slider('value',parseInt($fp_thumbScroller.scrollLeft(),10));
+				});
+
+				//在预览模式里，单击下一个按钮
+				$fp_next.bind('click',function(){
+					if(photo_nav){
+						photo_nav = false;
+						navigate(1);
+					}
+				});
+
+				//在预览模式里，单击上一个按钮
+				$fp_prev.bind('click',function(){
+					if(photo_nav){
+						photo_nav = false;
+						navigate(0);
+					}
+				});
+
+				//在滑动条里，单击下一个按钮
+				$('#fp_next_thumb').click(function(){
+					slideThumb(1);
+				});
+
+				//在滑动条里，单击上一个按钮
+				$('#fp_prev_thumb').click(function(){
+					slideThumb(0);
+				});
+
+				//单击关闭预览按钮
+				$fp_close.bind('click',function(){
+					if(!photo_nav) return;
+					//windows scroll if any
+					var windowS 		= $(window).scrollTop();
+					//获得预览的大图
+					var $large_img		= $('#fp_preview');
+					// 当前的缩略图
+					var $current 		= $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')')
+							.find('.content:nth-child('+parseInt(current+1)+')');
+					//获得当前的缩略图的偏移量
+					var current_offset	= $current.offset();
+					//大图会先中心动画缩小，然后删除
+					$large_img.stop().animate({
+						'top'			: current_offset.top + windowS + 'px',
+						'left'			: $(window).width()/2 - $current.width()/2 + 'px',
+						'width'			: $current.width() + 'px',
+						'height'		: $current.height() + 'px',
+						'opacity'		: 0
+					},800,function(){
+						$(this).remove();
+						//隐藏轮廓、上一个按钮、下一个按钮、关闭按钮
+						hidePreviewFunctions();
+					});
+
+
+				});
+
+				//将图片居中，如果 open=true，则打开图片
+				function centerImage($obj,open,speed){
+					//图片的偏移量
+					var obj_left 			= $obj.offset().left;
+					// 计算图片中心，等于左偏移量+图片宽度的一半
+					var obj_center 			= obj_left + ($obj.width()/2);
+					//计算窗口的中心
+					var center				= $(window).width()/2;
+					// 计算原画廊滚动条位置
+					var currentScrollLeft 	= parseFloat($fp_thumbScroller.scrollLeft(),10);
+					// 为了将图片居中，新的画廊滚动条位置= 图片中心-窗口中心+原画廊滚动条位置
+					var move 				= currentScrollLeft + (obj_center - center);
+					if(move != $fp_thumbScroller.scrollLeft()) //try 'easeInOutExpo'
+						$fp_thumbScroller.stop()
+								.animate({scrollLeft: move}, speed,function(){
+									if(open)
+										enlarge($obj);
+								});
+					else if(open)
+						enlarge($obj);
+				}
+
+				//显示大图
+				function enlarge($obj){
+					//定位缩略图中的图片
+					var $thumb = $obj.find('img');
+					//显示加载中图片
+					$fp_loading.show();
+					//加载大图
+					$('<img id="fp_preview" />').load(function(){
+						var $large_img 	= $(this);
+
+						//如果预览框已经存在，则移除
+						$('#fp_preview').remove();
+
+						$large_img.addClass('fp_preview');
+						//n将大图显示在缩略图的顶部
+						//然后添加到 the fp_gallery div元素中
+						var obj_offset 	= $obj.offset();
+						$large_img.css({
+							'width'	: $thumb.width() + 'px',
+							'height': $thumb.height() + 'px',
+							'top'	: obj_offset.top + 'px',
+							'left'	: obj_offset.left + 5 + 'px'// 边框宽度5px
+						}).appendTo($fp_gallery);
+						//getFinalValues()根据窗口大小计算可能的最大宽度和高度
+						// 使用 jQuery.data()方法将这些数据保存在元素中。
+						getFinalValues($large_img);
+
+						var largeW 	= 300;
+						var largeH 	= 300;
+						var $window = $(window);
+						var windowW = $window.width();
+						var windowH = $window.height();
+						var windowS = $window.scrollTop();
+						//隐藏加载中图片
+						$fp_loading.hide();
+						// 显示轮廓
+						$fp_overlay.show();
+						//动画处理大图
+
+						$large_img.stop().animate({
+							'top'		: windowH/2 -largeH/2 + windowS + 'px',
+							'left'		: windowW/2 -largeW/2 + 'px',
+							'width'		: largeW + 'px',
+							'height'	: largeH + 'px',
+							'opacity'	: 1
+						},800,function(){
+							//动画后显示前一个和后一个按钮
+							showPreviewFunctions();
+						});
+					}).attr('src',$thumb.attr('alt'));
+				}
+
+				//显示前一个或后一个按钮
+				//1 is 右侧;0 is 左侧
+				function navigate(way){
+					//显示加载中图片
+					$fp_loading.show();
+					if(way==1){
+						++current;
+						var $current = $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')')
+								.find('.content:nth-child('+parseInt(current+1)+')');
+						if($current.length == 0){
+							--current;
+							$fp_loading.hide();
+							photo_nav = true;
+							return;
+						}
+					}
+					else{
+						--current;
+						var $current = $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')')
+								.find('.content:nth-child('+parseInt(current+1)+')');
+						if($current.length == 0){
+							++current;
+							$fp_loading.hide();
+							photo_nav = true;
+							return;
+						}
+					}
+
+					//加载大图load large image of next/previous content div
+					$('<img id="fp_preview" />').load(function(){
+						$fp_loading.hide();
+						var $large_img 		= $(this);
+						var $fp_preview 	= $('#fp_preview');
+
+						var animate_to 		= -$fp_preview.width();
+						var animate_from	= $(window).width();
+						if(way==0){
+							animate_to 		= $(window).width();
+							animate_from	= -$fp_preview.width();
+						}
+
+						//将查看大图的缩略图居中
+						centerImage($current,false,1000);
+
+						// 动画显示大图
+						$fp_preview.stop().animate({'left':animate_to+'px'},500,function(){
+							$(this).remove();
+							$large_img.addClass('fp_preview');
+							getFinalValues($large_img);
+							var largeW 	= $large_img.data('width');
+							var largeH 	= $large_img.data('height');
+							var $window	= $(window);
+							var windowW = $window.width();
+							var windowH = $window.height();
+							var windowS = $window.scrollTop();
+							$large_img.css({
+								'width'	: largeW+'px',
+								'height': largeH+'px',
+								'top'	: windowH/2 -largeH/2 + windowS + 'px',
+								'left'		: animate_from + 'px',
+								'opacity' 	: 1
+							}).appendTo($fp_gallery)
+									.stop()
+									.animate({'left':windowW/2 -largeW/2+'px'},500,function(){photo_nav = true;});
+						});
+					}).attr('src',$current.find('img').attr('alt'));
+				}
+
+				//显示前一个、下一个、关闭预览按钮
+				function showPreviewFunctions(){
+					// alert("a")
+					// $fp_next.stop().animate({'right':'0px'},500);
+					// $fp_prev.stop().animate({'left':'0px'},500);
+					 $fp_close.show();
+				}
+
+				//隐藏轮廓、前一个、下一个、关闭预览按钮
+				function hidePreviewFunctions(){
+					// $fp_next.stop().animate({'right':'-50px'},500);
+					// $fp_prev.stop().animate({'left':'-50px'},500);
+					$fp_close.hide();
+					 $fp_overlay.hide();
+				}
+
+				//计算大图的大小和位置
+				function getFinalValues($image){
+					var widthMargin		= 0
+					var heightMargin 	= 20;
+					var $window			= $(window);
+					var windowH      	= $window.height()-heightMargin;
+					var windowW      	= $window.width()-widthMargin;
+					var theImage     = new Image();
+					theImage.src     = $image.attr("src");
+					var imgwidth     = theImage.width;
+					var imgheight    = theImage.height;
+
+					if((imgwidth > windowW)||(imgheight > windowH)){
+						if(imgwidth > imgheight){
+							var newwidth = windowW;
+							var ratio = imgwidth / windowW;
+							var newheight = imgheight / ratio;
+							theImage.height = newheight;
+							theImage.width= newwidth;
+							if(newheight>windowH){
+								var newnewheight = windowH;
+								var newratio = newheight/windowH;
+								var newnewwidth =newwidth/newratio;
+								theImage.width = newnewwidth;
+								theImage.height= newnewheight;
+							}
+						}
+						else{
+							var newheight = windowH;
+							var ratio = imgheight / windowH;
+							var newwidth = imgwidth / ratio;
+							theImage.height = newheight;
+							theImage.width= newwidth;
+							if(newwidth>windowW){
+								var newnewwidth = windowW;
+								var newratio = newwidth/windowW;
+								var newnewheight =newheight/newratio;
+								theImage.height = newnewheight;
+								theImage.width= newnewwidth;
+							}
+						}
+					}
+					$image.data('width',theImage.width);
+					$image.data('height',theImage.height);
+				}
+
+				//滑动画廊
+				function slideThumb(way){
+					if(way==1){
+						++current;
+						var $next = $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')')
+								.find('.content:nth-child('+parseInt(current+1)+')');
+						if($next.length > 0)
+							centerImage($next,false,600);
+						else{
+							--current;
+							return;
+						}
+					}
+					else{
+						--current;
+						var $prev = $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')')
+								.find('.content:nth-child('+parseInt(current+1)+')');
+						if($prev.length > 0)
+							centerImage($prev,false,600);
+						else{
+							++current;
+							return;
+						}
+					}
+				}
+
+				//停止滑动时，最近的图片位于窗口的中心
+				function checkClosest(){
+					var center 				= $(window).width()/2;
+					var current_distance 	= 99999999;
+					var idx					= 0;
+					$container				= $fp_thumbScroller.find('.container:nth-child('+parseInt(gallery_idx+1)+')');
+					$container.find('.content').each(function(i){
+						var $obj 		= $(this);
+						// 获得元素的左偏移量
+						var obj_left 	= $obj.offset().left;
+						// 左偏移量+宽度的一半就是中心
+						var obj_center 	= obj_left + ($obj.width()/2);
+						var distance	= Math.abs(center-obj_center);
+						if(distance < current_distance){
+							current_distance 	= distance;
+							idx					= i;
+						}
+					});
+					var $new_current 	= $container.find('.content:nth-child('+parseInt(idx+1)+')');
+					current 			= $new_current.index();
+					centerImage($new_current,false,200);
+				}
+			});
+		</script>
+    </head>
+    <body>
+		<div id="fp_gallery" class="fp_gallery">
+			<img src="../../static/merchant/img/greens/u=1159515329,1445070833&fm=26&gp=0.jpg" class="fp_bgImage" />
+			<div class="fp_bgPattern"></div>
+			<h1>不吃好，你有力气减肥??</h1>
+
+			<ul id="fp_galleryList" class="fp_galleryList" >
+				<li th:each="i : ${showMenu}" >
+					<span th:text="${i.key}"></span>
+				</li>
+
+				<li>返回首页</li>
+			</ul>
+			<div id="fp_thumbContainer">
+				<div id="fp_thumbScroller">
+					<div class="container" th:each="entry :${showMenu}">
+						<div class="content" th:each="list : ${entry.getValue()}">
+							<div ><a href="#"><img th:src="${list.m_url}" th:alt="${list.m_url}" class="thumb" /></a></div>
+						</div>
+					</div>
+
+					
+				</div>
+			</div>
+
+			<div id="fp_scrollWrapper" class="fp_scrollWrapper">
+				<span id="fp_prev_thumb" class="fp_prev_thumb"></span>
+				<div id="slider" class="slider"></div>
+				<span id="fp_next_thumb" class="fp_next_thumb"></span>
+			</div>
+
+			<div id="fp_overlay" class="fp_overlay"></div>
+			<div id="fp_loading" class="fp_loading"></div>
+			<div id="fp_next" class="fp_next"></div>
+			<div id="fp_prev" class="fp_prev"></div>
+			<div id="fp_close" class="fp_close">关闭预览</div>
+		</div>
+		<!--  JAVASCRIPT -->
+
+    </body>
+</html>
